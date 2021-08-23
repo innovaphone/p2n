@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<voicemail>
+<!-- Query a Boolean Object and toggle it == inno srl kwa 2016 v01 -->
+<!-- 10=ON  11=OFF 01=AUTO/UNKNOWN -->
+   <function define="Main">
+	<event type="timer" name="vbguard">
+ 		<pbx-disc /> 
+	</event>
+	<timer name="vbguard" sec="5" />
+	<event type="call-end">
+		<if cond="$Done">
+			<wait sec="1"/>
+			<store-cookie root="" name="Status.txt" value="$Action"/>
+		</if>
+	</event>
+	<assign out="$NameBoolean" value="BoolNotte" /> 
+	<assign out="$NumberBoolean" value="41" />
+	<assign out="$NumberPortON" value="24" />	
+	<assign out="$NumberPortOFF" value="20" />
+	<assign out="$Done" value="" />
+	<pbx-getcallinfo out-cgpn="$cgpn" out-cdpn="$cdpn" out-leg2="$leg2" />
+	<store-cookie root="" name="Status.txt" value="01"/>
+	<switch var="$cdpn">
+		<case equal="10">
+                	<assign out="$Action" value="10" />
+			<pbx-fwd e164="$NumberPortON" sec="1" />
+        	</case>
+		<case equal="11">
+                	<assign out="$Action" value="11" />
+			<pbx-fwd e164="$NumberPortOFF" sec="1" />
+        	</case>
+		<case equal="01">
+                	<assign out="$Action" value="01" />
+        	</case>
+		<default>
+                	<pbx-query-obj type="bool-status" name="$NameBoolean" out="$Status"/>
+			<if cond="$Status">
+				<assign out="$Action" value="10" />
+				<pbx-fwd e164="$NumberPortON" sec="1" />
+		        </if>
+			<else>
+				<assign out="$Action" value="11" />
+				<pbx-fwd e164="$NumberPortOFF" sec="1" />
+			</else>
+            	</default>
+	</switch>
+	<lib-strcat out-string="$target" string="$NumberBoolean" string2="$Action"/> 
+	<assign out="$Done" value="true" />
+	<pbx-xfer e164="$target" />
+    </function>
+</voicemail>
+<!-- Push2Night wiki-src/xml/P2N 1,0,0,0 (C) innovaphone AG 2010-2016 -->

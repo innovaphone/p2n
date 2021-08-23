@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<voicemail>
+<!-- Clears call after timeout == inno srl kwa 2016 v01 -->
+   <function define="Main">
+	<assign out="$Timeout" value="4" />
+	<store-get root="" name="silence.g711a" out-url="$ctrl"/>
+        <pbx-prompt url="$ctrl" sec="$Timeout" repeat="false"/>
+	<pbx-disc />
+   </function>
+</voicemail>
+<!-- Push2Night wiki-src/xml/P2N 1,0,0,0 (C) innovaphone AG 2010-2016 -->

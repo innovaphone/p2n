@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<voicemail>
+<!-- innovaphone Query a Boolean Object and call a destination == inno srl kwa 2016 v01 -->
+
+    <function define="Main">
+	<assign out="$NameBoolean" value="BoolNotte" />
+	<assign out="$NumberBoolean" value="41" />
+	<assign out="$NumberPortON" value="24" />	
+	<assign out="$NumberPortOFF" value="20" />
+	<store-cookie root="" name="Status.txt" out="$Flag"/>
+	<pbx-query-obj type="bool-status" name="$NameBoolean" out="$Status"/>
+	<wait sec="1"/>
+	<if cond="$Status">
+		<switch var="$Flag">	
+			<case equal="10">
+				<store-cookie root="" name="Status.txt" value="11"/>
+				<pbx-fwd e164="$NumberPortON" sec="1" />
+			</case>
+			<case equal="11">
+						
+			</case>
+			<default>
+				<store-cookie root="" name="Status.txt" value="11"/>
+				<pbx-fwd e164="$NumberPortON" sec="1" />
+			</default>
+		</switch>
+	</if>
+	<else>
+		<switch var="$Flag">	
+			<case equal="10">
+			</case>
+			<case equal="11">
+				<store-cookie root="" name="Status.txt" value="10"/>
+				<pbx-fwd e164="$NumberPortOFF" sec="1" />
+			</case>
+			<default>
+				<store-cookie root="" name="Status.txt" value="10"/>
+				<pbx-fwd e164="$NumberPortOFF" sec="1" />
+			</default>
+		</switch>
+	</else>
+    </function>
+</voicemail>
+<!-- Push2Night wiki-src/xml/P2N 1,0,0,0 (C) innovaphone AG 2010-2016 -->
